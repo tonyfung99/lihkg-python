@@ -37,7 +37,10 @@ def goPost(post_id, page = '1'):
             print(post['user_nickname'],':')
             print(post['msg'])
             print('-----------')
-        print('hi,', resp['me']['nickname'])
+        
+        if 'me' in resp:
+            print('hi,', resp['me']['nickname'])
+
         current_paging = '%s/%s' % (resp['page'], resp['total_page'])
         action = input('page ' + current_paging + ' / [n]ext / [b]ack / [r]efresh: ')
 
@@ -47,13 +50,13 @@ def goPost(post_id, page = '1'):
 #  
 token = None
 
-# goLogin = input('Login or Not? y/n: ')
-goLogin = 'y'
+goLogin = input('Login or Not? y/n: ')
+# goLogin = 'y'
 if goLogin.lower() == 'y':
-    # email = input('email: ')
-    # password = input('password: ')
-    email = 'hihi@hihi.com'
-    password = 'xxx'
+    email = input('email: ')
+    password = input('password: ')
+    # email = 'hihi@hihi.com'
+    # password = 'xxx'
     token = network.getToken(email, password)
 else:
     print('Not Logged in')

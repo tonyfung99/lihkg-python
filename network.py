@@ -10,7 +10,7 @@ common_header = {
     'referer': 'https://lihkg.com/category/1' 
 }
 
-device_sha1 = '7137b91d34c213695cf29dc3da2a8f5a95c3b976'
+device_sha1 = '7137b91d34c213695cf29dc3da2a8f5a95c3b976' # need to be generated
 device_type = 'android'
 agent = 'LIHKG/16.0.4 Android/9.0.0 Google/Pixel XL'
 
@@ -24,11 +24,14 @@ def digest(time, token, url):
 
 def request(url, t = None):
     timestamp = int(time.time())
-    auth_header = {
-        'X-LI-REQUEST-TIME': str(timestamp), 
-        'X-LI-USER':'49970', 
-        'X-LI-DIGEST': digest(timestamp, t, url)
-    }
+    auth_header = {}
+
+    if t != None :
+        auth_header = {
+            'X-LI-REQUEST-TIME': str(timestamp), 
+            'X-LI-USER':'49970', 
+            'X-LI-DIGEST': digest(timestamp, t, url)
+        }
     headers = {**common_header, **auth_header}
     # print(headers)
     r = requests.get(url, headers = headers)
@@ -39,5 +42,10 @@ def request(url, t = None):
 def getToken(email, password):
     
     r = requests.post('https://lihkg.com/api_v2/auth/login', headers=common_header, data={'email': email, 'password':password})
-    # print(r.json())
+    
+    if r.json()['success'] == 0:
+        print(r.json()['error_message'])
+    else:
+        print(r.json()['response']['user']['nickname'])
+
     return r.json()['response']['token']
